@@ -3,6 +3,7 @@ from datasets import load_dataset, concatenate_datasets
 from transformers import AutoTokenizer
 import os
 import sys
+import torch
 
 # Add parent dir to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
