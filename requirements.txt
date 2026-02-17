@@ -1,0 +1,10 @@
+torch>=2.4.0
+transformers>=4.40.0
+datasets>=2.19.0
+accelerate>=0.29.0
+einops>=0.8.0
+wandb>=0.16.6
+numpy>=1.26.0
+scipy>=1.13.0
+tqdm>=4.66.0
+tiktoken>=0.7.0
