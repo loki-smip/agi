@@ -61,14 +61,15 @@ class Attention(nn.Module):
         xk = xk.transpose(1, 2)
         xv = xv.transpose(1, 2)
 
-        scores = torch.matmul(xq, xk.transpose(2, 3)) / math.sqrt(self.head_dim)
-        if mask is not None:
-            # Broadcast mask over heads
-            scores = scores + mask  # (bsz, 1, seqlen, seqlen)
-
-        scores = F.softmax(scores.float(), dim=-1).type_as(xq)
-        scores = self.dropout(scores)
-        output = torch.matmul(scores, xv)  # (bsz, n_head, seqlen, head_dim)
+        # Efficient SDPA (Flash Attention where available)
+        # mask is (1, 1, seqlen, seqlen) additive mask from forward()
+        # SDPA expects distinct shapes depending on implementation, but additive mask works.
+        output = F.scaled_dot_product_attention(
+            xq, xk, xv, 
+            attn_mask=mask, 
+            dropout_p=self.dropout.p if self.training else 0.0,
+            is_causal=False # We handle causality via the mask passed in
+        )
         
         output = output.transpose(1, 2).contiguous().view(bsz, seqlen, -1)
         return self.wo(output)

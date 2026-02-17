@@ -4,13 +4,13 @@ from typing import Optional
 @dataclass
 class RecursiveLoopConfig:
     d_model: int = 1536  # Base dimension for ~1.5B 
-    n_head: int = 24     # Number of attention heads
+    n_head: int = 16     # Reduced to 16 for better OOM safety
     n_layers: int = 8    # Number of UNIQUE layers (weight-shared)
     loops: int = 4       # Number of times to loop through the unique layers 
                          # Total effective depth = n_layers * loops = 32
     
     vocab_size: int = 50257 # Using GPT2 tokenizer for ease
-    max_seq_len: int = 4096 # Context window
+    max_seq_len: int = 1024 # Reduced from 4096 to prevent OOM on T4/Consumer GPUs
     dropout: float = 0.1
     
     # Adaptive Gating

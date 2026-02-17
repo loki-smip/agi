@@ -67,7 +67,8 @@ def train(args):
     config = RecursiveLoopConfig(
         d_model=args.d_model, 
         n_layers=args.n_layers, 
-        loops=args.loops
+        loops=args.loops,
+        max_seq_len=args.seq_len
     )
     
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -155,6 +156,7 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", type=str, default="checkpoints")
     parser.add_argument("--data_dir", type=str, default="data/processed")
     parser.add_argument("--save_every", type=int, default=100)
+    parser.add_argument("--seq_len", type=int, default=1024, help="Sequence length for training")
     
     args = parser.parse_args()
     os.makedirs(args.output_dir, exist_ok=True)
